@@ -31,7 +31,7 @@ let sequelize =
         ssl: true,
       })
     : new Sequelize(
-        `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/videogames`,
+        `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/llatan`,
         { logging: false, native: false }
       );
 const basename = path.basename(__filename);
