@@ -10,11 +10,11 @@ const prueba = (req, res, next) => {
 };
 
 const crearclient = async (req, res, next) => {
-
   try {
     const { name, lastName, age, birthday } = req.body;
     console.log(typeof birthday);
-    if (!isValidDate(birthday)) res.status(400).send("Date has to be formatted yyyy-mm-dd.")
+    if (!isValidDate(birthday))
+      res.status(400).send("Date has to be formatted yyyy-mm-dd.");
     const validations = check({
       name: name,
       lastName: lastName,
@@ -26,9 +26,11 @@ const crearclient = async (req, res, next) => {
       await User.create({ name, lastName, age, birthday });
       res.status(201).send(`User ${name} has been created.`);
     } else {
-      res.status(400).send(
-        validations.reduce((acu, element) => `${acu}  ${element.message}`, "")
-      );
+      res
+        .status(400)
+        .send(
+          validations.reduce((acu, element) => `${acu}  ${element.message}`, "")
+        );
     }
   } catch (error) {
     next(error);
@@ -45,6 +47,7 @@ const kpiDeClientes = async (req, res, next) => {
           "lastName",
           "age",
           "birthday",
+          "estimateDeathDay",
           "createdAt",
           "updatedAt",
         ],
@@ -54,31 +57,33 @@ const kpiDeClientes = async (req, res, next) => {
         ],
       },
     });
-    console.log(allClients);
-    res.send(allClients[0].dataValues).status(200)
+    console.log(allClients[0].dataValues);
+    res
+      .status(200)
+      .json({
+        averageAge: Math.round(allClients[0].dataValues.avg),
+        standardDeviation: parseFloat(allClients[0].dataValues.stddev).toFixed(4),
+      });
   } catch (error) {
     next(error);
   }
 };
 
-const listclientes = async(req,res,next)=>{
+const listclientes = async (req, res, next) => {
   try {
-   const allUsers = await User.findAll({
-    attributes: {
-      exclude: [
-        "createdAt",
-        "updatedAt",
-      ]
-    },
-  })
-  res.json(allUsers).status(200)
+    const allUsers = await User.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    res.status(200).json(allUsers);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 module.exports = {
   prueba,
   crearclient,
   kpiDeClientes,
-  listclientes
+  listclientes,
 };
