@@ -23,11 +23,11 @@ router.post("/crearcliente", async (req, res, next) => {
     console.log(validations);
     if (validations === true) {
       await User.create({ name, lastName, age, birthday });
-      res.send(`User ${name}created`).status(201);
+      res.send(`User ${name} has been created.`).status(201);
     } else {
       throw new Error(
         validations.reduce(
-          (acu, element) => `${acu} and ${element.message}`,
+          (acu, element) => `${acu}  ${element.message}`,
           ""
         )
       );
