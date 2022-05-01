@@ -62,7 +62,7 @@ const kpiDeClientes = async (req, res, next) => {
       .status(200)
       .json({
         averageAge: Math.round(allClients[0].dataValues.avg),
-        standardDeviation:  parseFloat(parseFloat(allClients[0].dataValues.stddev).toFixed(4)) && 0,
+        standardDeviation:  parseFloat(allClients[0].dataValues.stddev).toFixed(4),
       });
   } catch (error) {
     next(error);
