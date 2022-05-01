@@ -18,15 +18,21 @@ router.post("/crearcliente", async (req, res, next) => {
       name: name,
       lastName: lastName,
       age: age,
-      birthday: new Date (birthday),
+      birthday: new Date(birthday),
     });
     console.log(validations);
-    if (validations !== true) {
+    if (validations === true) {
       await User.create({ name, lastName, age, birthday });
       res.send(`User ${name}created`).status(201);
+    } else {
+      throw new Error(
+        validations.reduce(
+          (acu, element) => `${acu} and ${element.message}`,
+          ""
+        )
+      );
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
