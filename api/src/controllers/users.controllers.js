@@ -2,7 +2,7 @@ const { Sequelize } = require("sequelize");
 
 const { User } = require("../db");
 
-const { check } = require("../validation/validation");
+const { check, isValidDate } = require("../validation/validation");
 
 const prueba = (req, res, next) => {
   console.log("AQUI");
@@ -10,19 +10,23 @@ const prueba = (req, res, next) => {
 };
 
 const crearclient = async (req, res, next) => {
+
   try {
     const { name, lastName, age, birthday } = req.body;
+    console.log(typeof birthday);
+    if (!isValidDate(birthday)) res.status(400).send("Date has to be formatted yyyy-mm-dd.")
     const validations = check({
       name: name,
       lastName: lastName,
       age: age,
       birthday: new Date(birthday),
     });
+
     if (validations === true) {
       await User.create({ name, lastName, age, birthday });
-      res.send(`User ${name} has been created.`).status(201);
+      res.status(201).send(`User ${name} has been created.`);
     } else {
-      throw new Error(
+      res.status(400).send(
         validations.reduce((acu, element) => `${acu}  ${element.message}`, "")
       );
     }
