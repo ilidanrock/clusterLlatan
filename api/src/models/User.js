@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { estimedDeath } = require('../utils/estimedDeath');
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
@@ -26,6 +27,14 @@ module.exports = (sequelize) => {
     birthday: {
       type: DataTypes.DATEONLY,
       allowNull: false,
+      set(value) {
+        this.setDataValue('birthday', value );
+
+        this.setDataValue('estimateDeathDay', estimedDeath(value));
+      }
+    },
+    estimateDeathDay: {
+      type: DataTypes.DATEONLY
     },
   });
 };

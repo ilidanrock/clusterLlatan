@@ -50,14 +50,27 @@ const kpiDeClientes = async (req, res, next) => {
         ],
       },
     });
+    console.log(allClients);
     res.send(allClients[0].dataValues).status(200)
   } catch (error) {
     next(error);
   }
 };
 
-const listclientes = (req,res,next)=>{
-    
+const listclientes = async(req,res,next)=>{
+  try {
+   const allUsers = await User.findAll({
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+      ]
+    },
+  })
+  res.json(allUsers).status(200)
+  } catch (error) {
+    next(error)
+  }
 }
 module.exports = {
   prueba,

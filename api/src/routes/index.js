@@ -13,6 +13,6 @@ router.route("/crearcliente").post(crearclient)
 
 router.route('/kpideclientes').get(kpiDeClientes)
 
-router.route('/listclientes​').get(listclientes)
+router.route('/listclientes').get(listclientes)
 
 module.exports = router;
