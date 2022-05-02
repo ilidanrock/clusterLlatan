@@ -14,11 +14,12 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING(30),
       allowNull: false,
+      unique: 'compositeIndex'
     },
     lastName: {
       type: DataTypes.STRING(30),
       allowNull: false,
-      
+      unique: 'compositeIndex'
     },
     age: {
       type: DataTypes.INTEGER,

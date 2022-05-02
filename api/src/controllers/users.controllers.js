@@ -1,18 +1,12 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 
 const { User } = require("../db");
 
 const { check, isValidDate } = require("../validation/validation");
 
-const prueba = (req, res, next) => {
-  console.log("AQUI");
-  res.send("Has sentido el poder del cosmos?");
-};
-
 const crearclient = async (req, res, next) => {
   try {
     const { name, lastName, age, birthday } = req.body;
-    console.log(typeof birthday);
     if (!isValidDate(birthday))
       res.status(400).send("Date has to be formatted yyyy-mm-dd.");
     const validations = check({
@@ -23,8 +17,21 @@ const crearclient = async (req, res, next) => {
     });
 
     if (validations === true) {
-      await User.create({ name, lastName, age, birthday });
-      res.status(201).send(`User ${name} has been created.`);
+      // name, lastName, age, birthday
+      const [user, created] = await User.findOrCreate({
+        where: { [Op.and]: [{ name: name }, { lastName: lastName }] },
+        defaults: {
+          name: name,
+          lastName: lastName,
+          age: age,
+          birthday: birthday,
+        },
+      });
+      created
+        ? res.status(201).send(`User ${name} has been created.`)
+        : res
+            .status(400)
+            .send(`User ${user.name} ${user.lastName} already exists.`);
     } else {
       res
         .status(400)
@@ -58,12 +65,11 @@ const kpiDeClientes = async (req, res, next) => {
       },
     });
     console.log(allClients[0].dataValues);
-    res
-      .status(200)
-      .json({
-        averageAge: Math.round(allClients[0].dataValues.avg),
-        standardDeviation:  parseFloat(parseFloat(allClients[0].dataValues.stddev).toFixed(4)) || 0,
-      });
+    res.status(200).json({
+      averageAge: Math.round(allClients[0].dataValues.avg),
+      standardDeviation:
+        parseFloat(parseFloat(allClients[0].dataValues.stddev).toFixed(4)) || 0,
+    });
   } catch (error) {
     next(error);
   }
@@ -82,7 +88,6 @@ const listclientes = async (req, res, next) => {
   }
 };
 module.exports = {
-  prueba,
   crearclient,
   kpiDeClientes,
   listclientes,
