@@ -30,7 +30,7 @@ const crearclient = async (req, res, next) => {
       created
         ? res.status(201).send(`User ${name} has been created.`)
         : res
-            .status(400)
+            .status(418)
             .send(`User ${user.name} ${user.lastName} already exists.`);
     } else {
       res
