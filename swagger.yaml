@@ -1,0 +1,81 @@
+swagger: "2.0"
+info:
+  description: Esta API guarda informacion personal de los clientes. Ademas, calcula la edad promedio, la desviacion estandar simple de todos los clientes y realiza una estimacion de la fecha de defuncion de los clientes de acuerdo con la esperanza de vida en Peru.
+  version: 1.0.0
+  title: API Llatan clientes
+  contact:
+    email: "rluis747@gmail.com"
+schemes:
+- "https"
+host: llatanperu.herokuapp.com
+tags:
+- name: clientes
+  description: Maneja la informacion personal de cada cliente
+
+paths:
+  /crearcliente:
+    post:
+      tags:
+      - clientes
+      summary: Agrega la informacion personal del usuario con nombre, apellido, edad y fecha de nacimiento
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Client"
+      responses:
+        "201":
+          description: "User Aquiles has been created."
+        "400":
+          description: "The 'xxxx' field is required"
+  /kpideclientes:
+    get:
+      tags:
+      - clientes
+      summary: Retorna el promedio de edad de los clientes y su desviacion estandar.
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: " The HTTP 200 OK success status response code indicates that the request has succeeded. Response body contains averageAge and standardDeviation "
+        "500":
+          description: "Internal Server Error"
+  /listclientes:
+    get:
+      tags:
+      - clientes
+      summary: Retorna la lista de clientes mas la estimacion de su fecha de muerte de cada uno de ellos.
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: " The HTTP 200 OK success status response code indicates that the request has succeeded. Response body contains all clientes saved in DB and their estimated death day."
+        "500":
+          description: "Internal Server Error"
+    
+definitions:
+  Client:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        default: "Aquiles"
+      lastName:
+        type: "string"
+        default: "Baeza"
+      age:
+        type: "integer"
+        default: 34
+      birthday:
+        type: "string"
+        format: "date"
+
+
+  
+
